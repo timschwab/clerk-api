@@ -5,7 +5,7 @@ const saltRounds = 10;
 
 async function create(name, pass) {
 	let userKey = 'user|' + name;
-	let pass = await bcrypt.hash(pass, saltRounds);
+	pass = await bcrypt.hash(pass, saltRounds);
 
 	await client.set(userKey, pass);
 }
