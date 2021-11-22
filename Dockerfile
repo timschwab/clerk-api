@@ -1,5 +1,5 @@
 FROM node:17
-WORKDIR /clerk
+WORKDIR /clerk/source
 
 COPY package*.json ./
 RUN npm install
