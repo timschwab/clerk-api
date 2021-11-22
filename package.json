@@ -1,0 +1,18 @@
+{
+	"author": "Tim Schwab",
+	"name": "clerk-api",
+	"version": "0.0.1",
+	"description": "Keeping your finances makes Clerk happy.",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/timschwab/clerk-api.git"
+	},
+	"bugs": {
+		"url": "https://github.com/timschwab/clerk-api/issues"
+	},
+	"homepage": "https://github.com/timschwab/clerk-api#readme",
+	"dependencies": {
+		"express": "^4.17.1",
+		"uuid": "^8.3.2"
+	}
+}
