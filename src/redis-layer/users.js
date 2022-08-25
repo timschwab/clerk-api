@@ -12,7 +12,7 @@ function redisKey(name) {
 async function create(name, pass) {
 	let nameKey = redisKey(name);
 
-	if (await client.get(userKey)) {
+	if (await client.get(nameKey)) {
 		throw new Error('`' + name + '` already exists.');
 	}
 
