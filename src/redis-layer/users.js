@@ -1,13 +1,41 @@
 const bcrypt = require('bcrypt');
 const client = require('./redis-client.js');
 
+const auth = require("./auth");
+
 const saltRounds = 10;
 
-async function create(name, pass) {
-	let userKey = 'user|' + name;
-	pass = await bcrypt.hash(pass, saltRounds);
-
-	await client.set(userKey, pass);
+function redisKey(name) {
+	return 'user|' + name;
 }
 
-module.exports.create = create;
+async function create(name, pass) {
+	let nameKey = redisKey(name);
+	let hashed = await bcrypt.hash(pass, saltRounds);
+
+	await client.set(nameKey, hashed);
+}
+
+async function authenticate(name, givenPass) {
+	let nameKey = redisKey(name);
+	let storedPass = await client.get(nameKey);
+	let match = await bcrypt.compare(givenPass, storedPass);
+
+	return match;
+}
+
+async function login(name, pass) {
+	let authenticated = await authenticate(name, pass);
+	if (!authenticated) {
+		throw "Could not authenticate credentials";
+	}
+
+	let token = await auth.newToken(name);
+	return token;
+}
+
+module.exports = {
+	create,
+	authenticate,
+	login
+};
