@@ -4,8 +4,8 @@ const router = express.Router();
 const utils = require("./utils");
 const budgetHandler = require('../redis-layer/budget');
 
-router.post('/budget/revenue', createRequest);
-router.get('/budget/revenue', loginRequest);
+router.post('/budget/revenue', setRevenue);
+router.get('/budget/revenue', getRevenue);
 
 async function setRevenue(req, res) {
 	let revenue = req.body.revenue;
