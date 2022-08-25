@@ -11,6 +11,11 @@ function redisKey(name) {
 
 async function create(name, pass) {
 	let nameKey = redisKey(name);
+
+	if (await client.get(userKey)) {
+		throw new Error('`' + name + '` already exists.');
+	}
+
 	let hashed = await bcrypt.hash(pass, saltRounds);
 
 	await client.set(nameKey, hashed);
