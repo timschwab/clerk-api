@@ -18,15 +18,21 @@ async function newToken(user) {
 	return token;
 }
 
-async function getToken(token) {
+async function getUser(token) {
 	let key = redisKey(token);
 
-	let user = client.get(key);
+	let user = await client.get(key);
 
 	return user;
 }
 
+async function validatePair(token, givenUser) {
+	let storedUser = await getUser(token);
+	return (givenUser == storedUser);
+}
+
 module.exports = {
 	newToken,
-	getToken
+	getUser,
+	validatePair
 };
