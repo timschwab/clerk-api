@@ -31,9 +31,15 @@ async function loginRequest(req, res) {
 
 	try {
 		let token = await usersHandler.login(name, pass);
-		res.send({
-			token: token
-		});
+		if (token) {
+			res.send({
+				token: token
+			});
+		} else {
+			res.send(401).send({
+				message: "Could not authenticate user"
+			})
+		}
 	} catch (err) {
 		res.status(500).send({
 			message: "Could not log in.",

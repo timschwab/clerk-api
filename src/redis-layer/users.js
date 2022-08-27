@@ -26,7 +26,7 @@ async function authenticate(name, givenPass) {
 	let storedPass = await client.get(nameKey);
 
 	if (!storedPass) {
-		throw "Name does not exist";
+		return false;
 	}
 
 	let match = await bcrypt.compare(givenPass, storedPass);
@@ -37,7 +37,7 @@ async function authenticate(name, givenPass) {
 async function login(name, pass) {
 	let authenticated = await authenticate(name, pass);
 	if (!authenticated) {
-		throw "Could not authenticate credentials";
+		return null;
 	}
 
 	let token = await auth.newToken(name);
