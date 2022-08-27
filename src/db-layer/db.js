@@ -2,7 +2,10 @@
 const fs = require('fs').promises;
 
 // Vars
-let state = {};
+let state = {
+	users: {},
+	tokens: {}
+};
 const dbFile = "/clerk/data/db.json";
 const secondsBetweenSaves = 10;
 
@@ -14,11 +17,16 @@ let saveInterval = setInterval(saveState, secondsBetweenSaves*1000);
 async function saveState() {
 	const jsonStr = JSON.stringify(state);
 	await fs.writeFile(dbFile, jsonStr);
+	console.log("State saved - " + new Date().toISOString());
 }
 
 async function loadState() {
-	const jsonStr = await fs.readFile(dbFile, 'utf8');
-	state = JSON.parse(jsonStr);
+	try {
+		const jsonStr = await fs.readFile(dbFile, 'utf8');
+		state = JSON.parse(jsonStr);
+	} catch (err) {
+		// This is fine - it means the file doesn't exist.
+	}
 }
 
 // Exports
