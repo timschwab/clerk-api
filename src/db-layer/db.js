@@ -6,7 +6,7 @@ const dbFile = "/clerk/data/db.json";
 const secondsBetweenSaves = 10;
 
 // Exports object
-let exports = {
+module.exports = {
 	state: undefined,
 	ready: false
 };
@@ -17,7 +17,7 @@ let saveInterval = setInterval(saveState, secondsBetweenSaves*1000);
 
 // Saving and loading
 async function saveState() {
-	const jsonStr = JSON.stringify(exports.state);
+	const jsonStr = JSON.stringify(module.exports.state);
 	await fs.writeFile(dbFile, jsonStr);
 	console.log("State saved - " + new Date().toISOString());
 }
@@ -25,12 +25,9 @@ async function saveState() {
 async function loadState() {
 	try {
 		const jsonStr = await fs.readFile(dbFile, 'utf8');
-		exports.state = JSON.parse(jsonStr);
+		module.exports.state = JSON.parse(jsonStr);
 	} catch (err) {
 		// This is fine - it means the file doesn't exist.
-		exports.state = {};
+		module.exports.state = {};
 	}
 }
-
-// Exports
-module.exports = exports;
