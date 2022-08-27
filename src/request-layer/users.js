@@ -36,9 +36,9 @@ async function loginRequest(req, res) {
 				token: token
 			});
 		} else {
-			res.send(401).send({
+			res.status(401).send({
 				message: "Could not authenticate user"
-			})
+			});
 		}
 	} catch (err) {
 		res.status(500).send({
