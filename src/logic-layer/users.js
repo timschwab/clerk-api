@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const db = require('../db-layer/db').state;
-
-const auth = require("./auth");
+const tokens = require('./tokens');
 
 const saltRounds = 10;
 
@@ -38,7 +37,7 @@ async function login(name, pass) {
 		return null;
 	}
 
-	let token = await auth.newToken(name);
+	let token = await tokens.newToken(name);
 	return token;
 }
 
