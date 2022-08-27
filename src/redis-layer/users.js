@@ -24,6 +24,11 @@ async function create(name, pass) {
 async function authenticate(name, givenPass) {
 	let nameKey = redisKey(name);
 	let storedPass = await client.get(nameKey);
+
+	if (!storedPass) {
+		throw "Name does not exist";
+	}
+
 	let match = await bcrypt.compare(givenPass, storedPass);
 
 	return match;

@@ -29,11 +29,17 @@ async function loginRequest(req, res) {
 	let name = req.body.name;
 	let pass = req.body.pass;
 
-	let token = await usersHandler.login(name, pass);
-
-	res.send({
-		token
-	});
+	try {
+		let token = await usersHandler.login(name, pass);
+		res.send({
+			token: token
+		});
+	} catch (err) {
+		res.status(500).send({
+			message: "Could not log in.",
+			details: err
+		});
+	}
 }
 
 module.exports = router;
