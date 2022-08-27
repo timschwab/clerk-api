@@ -13,7 +13,7 @@ async function register(user, pass) {
 
 	db.users[user] = {
 		pass: hashed,
-		tokens: Set()
+		tokenIndex: {}
 	};
 
 	return true;

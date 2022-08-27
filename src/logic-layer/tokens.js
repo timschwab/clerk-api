@@ -5,7 +5,7 @@ async function newToken(user) {
 	let token = uuid.v4();
 
 	db.tokens[token] = user;
-	db.users[user].tokens.add(token);
+	db.users[user].tokenIndex[token] = true;
 
 	return token;
 }
