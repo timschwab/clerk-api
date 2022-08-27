@@ -1,29 +1,27 @@
 const bcrypt = require('bcrypt');
-const client = require('./redis-client.js');
+const db = require('../db-layer/db').state;
 
 const auth = require("./auth");
 
 const saltRounds = 10;
 
-function redisKey(name) {
-	return 'user|' + name;
-}
-
-async function create(name, pass) {
-	let nameKey = redisKey(name);
-
-	if (await client.get(nameKey)) {
-		throw new Error('`' + name + '` already exists.');
+async function register(user, pass) {
+	if (db.users[user]) {
+		return false;
 	}
 
 	let hashed = await bcrypt.hash(pass, saltRounds);
 
-	await client.set(nameKey, hashed);
+	db.users[user] = {
+		pass: hashed,
+		tokens: Set()
+	};
+
+	return true;
 }
 
-async function authenticate(name, givenPass) {
-	let nameKey = redisKey(name);
-	let storedPass = await client.get(nameKey);
+async function authenticate(user, givenPass) {
+	let storedPass = db.users[user].pass;
 
 	if (!storedPass) {
 		return false;
@@ -45,7 +43,7 @@ async function login(name, pass) {
 }
 
 module.exports = {
-	create,
+	register,
 	authenticate,
 	login
 };

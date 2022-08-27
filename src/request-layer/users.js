@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-const usersHandler = require('../redis-layer/users');
+const usersHandler = require('../logic-layer/users');
 
-router.post('/users/create', createRequest);
+router.post('/users/register', registerRequest);
 router.post('/users/login', loginRequest);
 
-async function createRequest(req, res) {
+async function registerRequest(req, res) {
 	let name = req.body.name;
 	let pass = req.body.pass;
 
 	try {
-		await usersHandler.create(name, pass);
+		await usersHandler.register(name, pass);
 
 		res.send({
 			message: 'created'
@@ -21,8 +21,6 @@ async function createRequest(req, res) {
 			message: 'failure'
 		});
 	}
-
-
 }
 
 async function loginRequest(req, res) {

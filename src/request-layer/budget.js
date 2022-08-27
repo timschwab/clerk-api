@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const utils = require("./utils");
-const budgetHandler = require('../redis-layer/budget');
+const budgetHandler = require('../logic-layer/budget');
 
 router.post('/budget/revenue', setRevenue);
 router.get('/budget/revenue', getRevenue);
