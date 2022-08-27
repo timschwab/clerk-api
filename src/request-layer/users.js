@@ -11,11 +11,16 @@ async function registerRequest(req, res) {
 	let pass = req.body.pass;
 
 	try {
-		await usersHandler.register(name, pass);
-
-		res.send({
-			message: 'created'
-		});
+		let success = await usersHandler.register(name, pass);
+		if (success) {
+			res.send({
+				message: 'created'
+			});
+		} else {
+			res.status(400).send({
+				message: "User already exists"
+			});
+		}
 	} catch (err) {
 		res.status(500).send({
 			message: 'failure'
