@@ -1,17 +1,17 @@
 const bcrypt = require('bcrypt');
-const db = require('../db-layer/db').state;
+const db = require('../db-layer/db');
 const tokens = require('./tokens');
 
 const saltRounds = 10;
 
 async function register(user, pass) {
-	if (db.users[user]) {
+	if (db.state.users[user]) {
 		return false;
 	}
 
 	let hashed = await bcrypt.hash(pass, saltRounds);
 
-	db.users[user] = {
+	db.state.users[user] = {
 		pass: hashed,
 		tokenIndex: {}
 	};
@@ -20,7 +20,7 @@ async function register(user, pass) {
 }
 
 async function authenticate(user, givenPass) {
-	let storedPass = db.users[user].pass;
+	let storedPass = db.state.users[user].pass;
 
 	if (!storedPass) {
 		return false;
