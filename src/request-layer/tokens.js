@@ -2,19 +2,20 @@ const express = require('express');
 const router = express.Router();
 
 const tokenHandler = require('../logic-layer/tokens');
+const utils = require("./utils");
 
-router.post('/tokens/validate', validateRequest);
+router.get('/tokens/validate', validateRequest);
 
 async function validateRequest(req, res) {
-	let token = req.body.token;
+	let token = utils.extractToken(req);
 
 	try {
 		let success = await tokenHandler.validate(token);
 		if (success) {
 			res.send(200);
 		} else {
-			res.status(400).send({
-				message: "Token not found"
+			res.status(401).send({
+				message: "Could not authenticate"
 			});
 		}
 	} catch (err) {

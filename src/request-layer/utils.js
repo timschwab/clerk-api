@@ -3,11 +3,11 @@ function extractToken(req) {
 
 	let header = req.get("Authorization");
 	if (!header) {
-		throw "Missing header";
+		return null;
 	}
 
 	if (!header.startsWith(prefix)) {
-		throw "Badly formatted header";
+		return null;
 	}
 
 	return header.slice(prefix.length);

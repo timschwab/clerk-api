@@ -42,12 +42,13 @@ setInterval(expireTokens, secondsBetweenExpireChecks*1000);
 async function expireTokens() {
 	// Loop through and remove them (This should be a queue implementation obvs.)
 	let now = new Date();
-	for (let token of Object.items(db.state.tokens)) {
+	for (let token of Object.values(db.state.tokens)) {
 		let expire = new Date(token.expire);
 		if (expire < now) {
 			delete db.state.tokens[token];
 		}
 	}
+	console.log("Tokens cleaned - " + new Date().toISOString());
 }
 
 module.exports = {

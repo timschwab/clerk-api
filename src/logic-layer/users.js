@@ -20,8 +20,7 @@ async function register(user, pass) {
 	let hashed = await bcrypt.hash(pass, saltRounds);
 
 	db.state.users[user] = {
-		pass: hashed,
-		tokenIndex: {}
+		pass: hashed
 	};
 
 	return true;

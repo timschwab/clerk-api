@@ -17,7 +17,7 @@ setInterval(saveState, secondsBetweenSaves*1000);
 
 // Saving and loading
 async function saveState() {
-	const jsonStr = JSON.stringify(exportWrapper.state);
+	const jsonStr = JSON.stringify(exportWrapper.state, null, 2);
 	await fs.writeFile(dbFile, jsonStr);
 	console.log("State saved - " + new Date().toISOString());
 }
