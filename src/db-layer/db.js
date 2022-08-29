@@ -3,17 +3,17 @@ const fs = require('fs').promises;
 
 // Vars
 const dbFile = "/clerk/data/db.json";
-const secondsBetweenSaves = 10;
+const secondsBetweenSaves = 15;
 
 // Exports object
 let exportWrapper = {
 	state: undefined,
-	ready: false
+	ready: undefined
 };
 
 // Setup
-exports.ready = loadState();
-let saveInterval = setInterval(saveState, secondsBetweenSaves*1000);
+exportWrapper.ready = loadState();
+setInterval(saveState, secondsBetweenSaves*1000);
 
 // Saving and loading
 async function saveState() {

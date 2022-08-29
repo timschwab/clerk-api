@@ -4,6 +4,14 @@ const tokens = require('./tokens');
 
 const saltRounds = 10;
 
+setup();
+async function setup() {
+	await db.ready;
+	if (!db.state.users) {
+		db.state.users = {};
+	}
+}
+
 async function register(user, pass) {
 	if (db.state.users[user]) {
 		return false;

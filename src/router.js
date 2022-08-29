@@ -11,6 +11,7 @@ router.use(function (req, res, next) {
 router.use(express.json());
 
 router.use(require('./request-layer/users'));
+router.use(require('./request-layer/tokens'));
 // router.use(require('./request-layer/budget'));
 
 // 404
