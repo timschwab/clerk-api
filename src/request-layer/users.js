@@ -12,7 +12,7 @@ async function registerRequest(req, res) {
 
 	let result = await usersHandler.register(name, pass);
 	if (result.success) {
-		res.status(200);
+		res.status(200).send();
 	} else {
 		res.status(400).send(result.message);
 	}
@@ -24,7 +24,7 @@ async function loginRequest(req, res) {
 
 	let result = await usersHandler.login(name, pass);
 	if (result.success) {
-		res.send({
+		res.status(200).send({
 			token: result.return
 		});
 	} else {
