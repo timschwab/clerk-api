@@ -1,5 +1,8 @@
 const uuid = require("uuid");
+const logger = require("../logger");
 const db = require('../db-layer/db');
+const response = require("./result");
+
 const secondsBetweenExpireChecks = 60;
 
 setup();
@@ -27,7 +30,12 @@ async function newToken(user) {
 }
 
 async function getUser(token) {
-	return db.state.tokens[token];
+	let tokenObject = db.state.tokens[token];
+	if (tokenObject) {
+		return response.success(tokenObject.user);
+	} else {
+		return response.failure("Token doesn't exist.");
+	}
 }
 
 async function validate(token) {
@@ -48,7 +56,7 @@ async function expireTokens() {
 			delete db.state.tokens[token];
 		}
 	}
-	console.log("Tokens cleaned - " + new Date().toISOString());
+	logger.info("Tokens cleaned - " + new Date().toISOString());
 }
 
 module.exports = {

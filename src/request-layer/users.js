@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+const wrapped = require("./wrappedRouter");
+const router = wrapped.make();
 
 const usersHandler = require('../logic-layer/users');
 
@@ -10,22 +10,11 @@ async function registerRequest(req, res) {
 	let name = req.body.name;
 	let pass = req.body.pass;
 
-	try {
-		let success = await usersHandler.register(name, pass);
-		if (success) {
-			res.send({
-				message: 'created'
-			});
-		} else {
-			res.status(400).send({
-				message: "User already exists"
-			});
-		}
-	} catch (err) {
-		console.log(err);
-		res.status(500).send({
-			message: 'failure'
-		});
+	let result = await usersHandler.register(name, pass);
+	if (result.success) {
+		res.status(200);
+	} else {
+		res.status(400).send(result.message);
 	}
 }
 
@@ -33,23 +22,14 @@ async function loginRequest(req, res) {
 	let name = req.body.name;
 	let pass = req.body.pass;
 
-	try {
-		let token = await usersHandler.login(name, pass);
-		if (token) {
-			res.send({
-				token: token
-			});
-		} else {
-			res.status(401).send({
-				message: "Could not authenticate user"
-			});
-		}
-	} catch (err) {
-		res.status(500).send({
-			message: "Could not log in.",
-			details: err
+	let result = await usersHandler.login(name, pass);
+	if (result.success) {
+		res.send({
+			token: result.return
 		});
+	} else {
+		res.status(401).send();
 	}
 }
 
-module.exports = router;
+module.exports = router.router;
