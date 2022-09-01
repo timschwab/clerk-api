@@ -1,5 +1,6 @@
 // Includes
 const fs = require('fs').promises;
+const logger = require("../logger");
 
 // Vars
 const dbFile = "/clerk/data/db.json";
@@ -19,7 +20,7 @@ setInterval(saveState, secondsBetweenSaves*1000);
 async function saveState() {
 	const jsonStr = JSON.stringify(exportWrapper.state, null, 2);
 	await fs.writeFile(dbFile, jsonStr);
-	console.log("State saved - " + new Date().toISOString());
+	logger.info("State saved");
 }
 
 async function loadState() {

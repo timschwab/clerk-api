@@ -53,10 +53,10 @@ async function expireTokens() {
 	for (let token of Object.values(db.state.tokens)) {
 		let expire = new Date(token.expire);
 		if (expire < now) {
-			delete db.state.tokens[token];
+			delete db.state.tokens[token.token];
 		}
 	}
-	logger.info("Tokens cleaned - " + new Date().toISOString());
+	logger.info("Tokens expired");
 }
 
 module.exports = {
