@@ -1,6 +1,6 @@
-const uuid = require("uuid");
 const logger = require("../logger");
 const db = require('../db-layer/db');
+const slim = require("../slim-id");
 const response = require("./result");
 
 const secondsBetweenExpireChecks = 60;
@@ -14,7 +14,7 @@ async function setup() {
 }
 
 async function newToken(user) {
-	let token = uuid.v4();
+	let token = await slim.make();
 	let tomorrow = new Date();
 	tomorrow.setDate(new Date().getDate() + 1);
 

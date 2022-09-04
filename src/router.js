@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const logger = require("./logger");
+const slim = require("./slim-id");
 
 // Add CORS
 router.use(function (req, res, next) {
@@ -15,15 +16,21 @@ router.use(express.json());
 // Extract auth header and put it on the req
 router.use(function (req, res, next) {
 	const prefix = "Bearer ";
+	let token = null;
 
 	let header = req.get("Authorization");
 	if (!header) {
-		req.auth = null;
+		token = null;
 	} else if (!header.startsWith(prefix)) {
-		req.auth = null;
+		token = null;
 	} else {
-		req.auth = header.slice(prefix.length);
+		token = header.slice(prefix.length);
+		if (!slim.validate(token)) {
+			token = null;
+		}
 	}
+
+	req.auth = token;
 
 	next();
 });
