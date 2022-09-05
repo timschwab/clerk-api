@@ -14,7 +14,7 @@ async function setup() {
 }
 
 async function newToken(user) {
-	let token = await slim.make();
+	let token = slim.make();
 	let tomorrow = new Date();
 	tomorrow.setDate(new Date().getDate() + 1);
 

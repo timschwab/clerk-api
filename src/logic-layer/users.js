@@ -30,7 +30,7 @@ async function register(username, password) {
 
 	// Create the id and hashed password
 	let hashed = await bcrypt.hash(password, saltRounds);
-	let id = await slim.make();
+	let id = slim.make();
 
 	// Set the core data
 	db.state.users.data[id] = {
