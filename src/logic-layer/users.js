@@ -29,8 +29,8 @@ async function register(username, password) {
 	}
 
 	// Create the id and hashed password
-	let hashed = await bcrypt.hash(password, saltRounds);
 	let id = slim.make();
+	let hashed = await bcrypt.hash(password, saltRounds);
 
 	// Set the core data
 	db.state.users.data[id] = {
@@ -45,13 +45,23 @@ async function register(username, password) {
 	return result.success();
 }
 
-async function getId(username) {
-	let id = db.state.users.index[username];
-	if (id) {
-		return result.success(id);
-	} else {
-		return result.failure("Username not in use.");
+async function login(username, password) {
+	let user = await getId(username);
+	if (!user) {
+		return result.failure("Username not in use");
 	}
+
+	let authenticated = await authenticate(user, password);
+	if (!authenticated.success) {
+		return authenticated;
+	}
+
+	let token = await tokens.newToken(user);
+	return result.success(token);
+}
+
+async function getId(username) {
+	return db.state.users.index[username];
 }
 
 async function authenticate(user, givenPass) {
@@ -70,21 +80,6 @@ async function authenticate(user, givenPass) {
 	}
 }
 
-async function login(username, password) {
-	let id = await getId(username);
-	if (!id.success) {
-		return id;
-	}
-
-	let authenticated = await authenticate(id.return, password);
-	if (!authenticated.success) {
-		return authenticated;
-	}
-
-	let token = await tokens.newToken(id.return);
-	return result.success(token);
-}
-
 async function getInfo(user) {
 	let info = db.state.users.data[user];
 	if (info) {
@@ -97,9 +92,45 @@ async function getInfo(user) {
 	}
 }
 
+async function changeUsername(id, newUsername) {
+	// Get and validate the old username
+	let oldUsername = db.state.users.data[id].username;
+	if (oldUsername == newUsername) {
+		return result.failure("The new username is the same as the old username");
+	}
+
+	// Validate the new username
+	if (!newUsername) {
+		return result.failure("Please specify a new username");
+	}
+
+	let newUser = await getId(newUsername);
+	if (newUser) {
+		return result.failure("Username already in use");
+	}
+
+	// Change the username in the data
+	db.state.users.data[id].username = newUsername;
+	
+	// Change the username in the index
+	db.state.users.index[newUsername] = id;
+	delete db.state.users.index[oldUsername];
+
+	// Return
+	return result.success();
+}
+
+async function changePassword(id, newPassword) {
+	let hashed = await bcrypt.hash(newPassword, saltRounds);
+	db.state.users.data[id].password = hashed;
+	return result.success();
+}
+
 module.exports = {
 	register,
 	authenticate,
 	login,
-	getInfo
+	getInfo,
+	changeUsername,
+	changePassword
 };
