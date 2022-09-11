@@ -1,56 +1,32 @@
-const express = require('express');
+// Load Express
+const express = require("express");
 const router = express.Router();
-const logger = require("./logger");
-const slim = require("./slim-id");
 
-// Add CORS
-router.use(function (req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "*");
-	next();
-});
+// Load middlewares
+const cors = require("./request-layer/cors");
+const auth = require("./request-layer/auth");
+const errors = require("./request-layer/errors");
 
-// Parse json
+// Load main routes
+const users = require("./request-layer/users");
+const tokens = require("./request-layer/tokens");
+
+
+
+// Use intial middlewares
+router.use(cors);
 router.use(express.json());
+router.use(auth);
 
-// Extract auth header and put it on the req
-router.use(function (req, res, next) {
-	const prefix = "Bearer ";
-	let token = null;
+// Use the main routes
+router.use(users);
+router.use(tokens);
 
-	let header = req.get("Authorization");
-	if (!header) {
-		token = null;
-	} else if (!header.startsWith(prefix)) {
-		token = null;
-	} else {
-		token = header.slice(prefix.length);
-		if (!slim.validate(token)) {
-			token = null;
-		}
-	}
+// Handle errors
+router.use(errors.error404);
+router.use(errors.error500);
 
-	req.auth = token;
 
-	next();
-});
 
-// The actual main routes
-router.use(require('./request-layer/users'));
-router.use(require('./request-layer/tokens'));
-
-// 404
-router.use(function (req, res, next) {
-	res.status(404).send({
-		message: 'failure',
-		details: 'Route not found'
-	});
-});
-
-// 500
-router.use(function (err, req, res, next) {
-	logger.error(err.stack);
-	res.status(500).send();
-});
-
+// Export
 module.exports = router;
