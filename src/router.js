@@ -14,7 +14,7 @@ const tokens = require("./request-layer/tokens");
 
 
 
-// Use intial middlewares
+// Use initial middlewares
 router.use(cors);
 router.use(express.json());
 router.use(auth);
