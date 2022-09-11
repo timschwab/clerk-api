@@ -5,6 +5,7 @@ const usersHandler = require('../logic-layer/users');
 
 router.post('/users/register', registerRequest);
 router.post('/users/login', loginRequest);
+router.get("/users/info", infoRequest);
 
 async function registerRequest(req, res) {
 	let name = req.body.name;
@@ -27,6 +28,16 @@ async function loginRequest(req, res) {
 		res.status(200).send({
 			token: result.return
 		});
+	} else {
+		res.status(401).send();
+	}
+}
+
+async function infoRequest(req, res) {
+	let user = req.auth.user;
+	let info = usersHandler.getInfo(user);
+	if (info.success) {
+		res.status(200).send(info.return);
 	} else {
 		res.status(401).send();
 	}

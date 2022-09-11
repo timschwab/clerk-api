@@ -46,6 +46,10 @@ async function validate(token) {
 	}
 }
 
+async function deleteToken(token) {
+	delete db.state.tokens[token];
+}
+
 setInterval(expireTokens, secondsBetweenExpireChecks*1000);
 async function expireTokens() {
 	// Loop through and remove them (This should be a queue implementation obvs.)
@@ -53,7 +57,7 @@ async function expireTokens() {
 	for (let token of Object.values(db.state.tokens)) {
 		let expire = new Date(token.expire);
 		if (expire < now) {
-			delete db.state.tokens[token.token];
+			await deleteToken(token.token);
 		}
 	}
 	logger.info("Tokens expired");

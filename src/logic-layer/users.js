@@ -45,12 +45,12 @@ async function register(username, password) {
 	return result.success();
 }
 
-async function get(username) {
+async function getId(username) {
 	let id = db.state.users.index[username];
-	if (!id) {
-		return result.failure("Username not in use.");
-	} else {
+	if (id) {
 		return result.success(id);
+	} else {
+		return result.failure("Username not in use.");
 	}
 }
 
@@ -71,7 +71,7 @@ async function authenticate(user, givenPass) {
 }
 
 async function login(username, password) {
-	let id = await get(username);
+	let id = await getId(username);
 	if (!id.success) {
 		return id;
 	}
@@ -85,8 +85,19 @@ async function login(username, password) {
 	return result.success(token);
 }
 
+async function getInfo(id) {
+	let info = db.state.users.data[id];
+	if (info) {
+		delete info.password;
+		return result.success(info);
+	} else {
+		return result.failure("User does not exist.");
+	}
+}
+
 module.exports = {
 	register,
 	authenticate,
-	login
+	login,
+	getInfo
 };

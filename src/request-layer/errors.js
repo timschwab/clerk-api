@@ -1,4 +1,4 @@
-const logger = require("./logger");
+const logger = require("../logger");
 
 // 404
 function error404(req, res, next) {

@@ -12,7 +12,7 @@ let bufferPointer = 0;
 let vals = new Array(16);
 
 // The main function
-async function make() {
+function make() {
 	// Get the random bytes
 	if (bufferPointer == 0) {
 		crypto.randomFillSync(buffer);
