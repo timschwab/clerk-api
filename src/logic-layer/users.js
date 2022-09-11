@@ -85,11 +85,13 @@ async function login(username, password) {
 	return result.success(token);
 }
 
-async function getInfo(id) {
-	let info = db.state.users.data[id];
+async function getInfo(user) {
+	let info = db.state.users.data[user];
 	if (info) {
-		delete info.password;
-		return result.success(info);
+		return result.success({
+			id: info.id,
+			username: info.username
+		});
 	} else {
 		return result.failure("User does not exist.");
 	}

@@ -1,3 +1,4 @@
+const logger = require("../logger");
 const wrapped = require("./wrappedRouter");
 const router = wrapped.make();
 
@@ -35,7 +36,9 @@ async function loginRequest(req, res) {
 
 async function infoRequest(req, res) {
 	let user = req.auth.user;
-	let info = usersHandler.getInfo(user);
+	logger.info("Getting info for: " + user);
+
+	let info = await usersHandler.getInfo(user);
 	if (info.success) {
 		res.status(200).send(info.return);
 	} else {

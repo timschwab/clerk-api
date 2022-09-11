@@ -1,7 +1,6 @@
 function now() {
 	let nowDate = new Date();
-	let nowStr = nowDate.toISOString()
-	return nowStr;
+	return nowDate.toISOString();
 }
 
 async function info(message) {

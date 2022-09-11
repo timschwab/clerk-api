@@ -1,4 +1,5 @@
 const slim = require("../slim-id");
+const logger = require("../logger");
 const tokens = require("../logic-layer/tokens");
 
 async function middleware(req, res, next) {
@@ -19,6 +20,9 @@ async function middleware(req, res, next) {
 		token,
 		user
 	};
+
+	logger.info("Path: " + req.path);
+	logger.info("User: " + user);
 
 	next();
 }
