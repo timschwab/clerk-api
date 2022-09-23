@@ -5,14 +5,6 @@ const response = require("./result");
 
 const secondsBetweenExpireChecks = 60;
 
-setup();
-async function setup() {
-	await db.ready;
-	if (!db.state.tokens) {
-		db.state.tokens = {};
-	}
-}
-
 async function newToken(user) {
 	let token = slim.make();
 	let tomorrow = new Date();

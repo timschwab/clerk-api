@@ -6,22 +6,6 @@ const tokens = require('./tokens');
 
 const saltRounds = 12;
 
-setup();
-async function setup() {
-	await db.ready;
-	if (!db.state.users) {
-		db.state.users = {};
-	}
-
-	if (!db.state.users.index) {
-		db.state.users.index = {};
-	}
-
-	if (!db.state.users.data) {
-		db.state.users.data = {};
-	}
-}
-
 async function register(username, password) {
 	// Validate the desired username
 	if (db.state.users.index[username]) {

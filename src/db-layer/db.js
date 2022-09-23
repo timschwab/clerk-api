@@ -1,6 +1,7 @@
 // Includes
 const fs = require('fs').promises;
 const logger = require("../logger");
+let initialize = require("./initialize");
 
 // Vars
 const dbFile = "/clerk/data/db.json";
@@ -24,13 +25,16 @@ async function saveState() {
 }
 
 async function loadState() {
+	let state = {};
+
 	try {
 		const jsonStr = await fs.readFile(dbFile, 'utf8');
-		exportWrapper.state = JSON.parse(jsonStr);
+		state = JSON.parse(jsonStr);
 	} catch (err) {
 		// This is fine - it means the file doesn't exist.
-		exportWrapper.state = {};
 	}
+
+	exportWrapper.state = initialize.initState(state);
 }
 
 // Export
