@@ -15,5 +15,15 @@
 		"bcrypt": "^5.0.1",
 		"express": "^4.17.1",
 		"redis": "^4.0.0-rc.4"
+	},
+	"devDependencies": {
+		"lint-staged": "^13.0.3",
+		"prettier": "^2.7.1"
+	},
+	"scripts": {
+		"postinstall": "git config core.hooksPath git-hooks"
+	},
+	"lint-staged": {
+		"*.{js,json,css,html,vue}": "prettier --write"
 	}
 }
