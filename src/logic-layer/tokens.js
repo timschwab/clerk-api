@@ -1,7 +1,7 @@
 const logger = require("../logger");
-const db = require('../db-layer/db');
+const db = require("../db-layer/db");
 const slim = require("../slim-id");
-const response = require("./result");
+const result = require("./result");
 
 const secondsBetweenExpireChecks = 60;
 
@@ -13,7 +13,7 @@ async function newToken(user) {
 	let object = {
 		token: token,
 		user: user,
-		expire: tomorrow.toISOString()
+		expire: tomorrow.toISOString(),
 	};
 
 	db.state.tokens[token] = object;
@@ -24,9 +24,9 @@ async function newToken(user) {
 async function getUser(token) {
 	let tokenObject = db.state.tokens[token];
 	if (tokenObject) {
-		return response.success(tokenObject.user);
+		return result.success(tokenObject.user);
 	} else {
-		return response.failure("Token doesn't exist.");
+		return result.failure("Token doesn't exist.");
 	}
 }
 
@@ -42,7 +42,7 @@ async function deleteToken(token) {
 	delete db.state.tokens[token];
 }
 
-setInterval(expireTokens, secondsBetweenExpireChecks*1000);
+setInterval(expireTokens, secondsBetweenExpireChecks * 1000);
 async function expireTokens() {
 	// Loop through and remove them (This should be a queue implementation obvs.)
 	let now = new Date();
@@ -58,5 +58,5 @@ async function expireTokens() {
 module.exports = {
 	newToken,
 	getUser,
-	validate
+	validate,
 };

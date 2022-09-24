@@ -2,12 +2,16 @@ function make() {
 	return {
 		tokens: {},
 		users: {
+			data: {},
 			index: {},
-			data: {}
-		}
+		},
+		groups: {
+			data: {},
+			userIndex: {},
+		},
 	};
 }
 
 module.exports = {
-	make
+	make,
 };
