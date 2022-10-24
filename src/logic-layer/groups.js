@@ -27,18 +27,40 @@ async function create(user) {
 }
 
 async function getUserGroups(user) {
+	let groups;
 	let groupIds = db.state.groups.userIndex[user];
-	let groups = groupIds.map((group) => {
-		let obj = {
-			id: group,
-			name: db.state.groups.data[group].name,
-		};
-		return obj;
-	});
+
+	if (groupIds) {
+		groups = groupIds.map((group) => {
+			let obj = {
+				id: group,
+				name: db.state.groups.data[group].name,
+			};
+			return obj;
+		});
+	} else {
+		groups = [];
+	}
+
 	return result.success(groups);
+}
+
+async function getGroup(user, group) {
+	let index = db.state.groups.userIndex[user];
+	if (index) {
+		if (index.contains(group)) {
+			let groupData = db.state.groups.data[groupId];
+			return result.success(groupData);
+		} else {
+			result.failure("User cannot view group, or group does not exist");
+		}
+	} else {
+		return result.failure("User has no groups");
+	}
 }
 
 module.exports = {
 	create,
 	getUserGroups,
+	getGroup,
 };

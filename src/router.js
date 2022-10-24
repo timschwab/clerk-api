@@ -21,7 +21,7 @@ router.use(auth);
 // Use the main routes
 router.use(users);
 router.use(tokens);
-router.user(groups);
+router.use(groups);
 
 // Handle errors
 router.use(errors.error404);

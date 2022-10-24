@@ -1,8 +1,8 @@
 FROM node:17
-WORKDIR /clerk/source
+WORKDIR /clerk/repo
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci --ignore-scripts
 COPY . ./
 
 EXPOSE 8357
