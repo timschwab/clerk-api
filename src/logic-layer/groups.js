@@ -9,7 +9,7 @@ async function create(user) {
 		id: groupId,
 		name: "New Group",
 		members: {
-			user: "admin",
+			[user]: "admin",
 		},
 	};
 
@@ -45,22 +45,33 @@ async function getUserGroups(user) {
 	return result.success(groups);
 }
 
-async function getGroup(user, group) {
-	let index = db.state.groups.userIndex[user];
-	if (index) {
-		if (index.contains(group)) {
-			let groupData = db.state.groups.data[groupId];
-			return result.success(groupData);
-		} else {
-			result.failure("User cannot view group, or group does not exist");
-		}
+async function info(user, group) {
+	let groupData = db.state.groups.data[group];
+	if (groupData.members[user]) {
+		let info = {
+			id: groupData.id,
+			name: groupData.name,
+			role: groupData.members[user],
+		};
+		return result.success(info);
 	} else {
-		return result.failure("User has no groups");
+		result.failure("User cannot view group, or group does not exist");
+	}
+}
+
+async function changeName(user, group, newName) {
+	let groupData = db.state.groups.data[group];
+	if (groupData.members[user] == "admin") {
+		groupData.name = newName;
+		return result.success();
+	} else {
+		result.failure("User cannot change group's name");
 	}
 }
 
 module.exports = {
 	create,
 	getUserGroups,
-	getGroup,
+	info,
+	changeName,
 };
