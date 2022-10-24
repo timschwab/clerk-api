@@ -9,8 +9,8 @@ async function create(user) {
 		id: groupId,
 		name: "New Group",
 		members: {
-			[user]: "admin",
-		},
+			[user]: "admin"
+		}
 	};
 
 	// Add group to groups
@@ -34,7 +34,7 @@ async function getUserGroups(user) {
 		groups = groupIds.map((group) => {
 			let obj = {
 				id: group,
-				name: db.state.groups.data[group].name,
+				name: db.state.groups.data[group].name
 			};
 			return obj;
 		});
@@ -51,7 +51,7 @@ async function info(user, group) {
 		let info = {
 			id: groupData.id,
 			name: groupData.name,
-			role: groupData.members[user],
+			role: groupData.members[user]
 		};
 		return result.success(info);
 	} else {
@@ -69,9 +69,30 @@ async function changeName(user, group, newName) {
 	}
 }
 
+async function deleteGroup(user, group) {
+	let groups = db.state.groups;
+	let groupData = groups.data[group];
+	if (groupData.members[user] == "admin") {
+		// Remove group from user indices
+		for (let user of Object.keys(groupData.members)) {
+			groups.userIndex[user] = groups.userIndex[user].filter(
+				(val) => val != group
+			);
+		}
+
+		// Remove group from groups
+		delete groups.data[group];
+
+		return result.success();
+	} else {
+		result.failure("User cannot change group's name");
+	}
+}
+
 module.exports = {
 	create,
 	getUserGroups,
 	info,
 	changeName,
+	deleteGroup
 };
