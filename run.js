@@ -4,7 +4,6 @@ const app = express();
 const router = require("./src/router.js");
 
 const port = 8357;
-const test = "henlo";
 
 app.use("/", router);
 

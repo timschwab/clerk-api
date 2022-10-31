@@ -47,16 +47,21 @@ async function getUserGroups(user) {
 
 async function info(user, group) {
 	let groupData = db.state.groups.data[group];
-	if (groupData.members[user]) {
-		let info = {
-			id: groupData.id,
-			name: groupData.name,
-			role: groupData.members[user]
-		};
-		return result.success(info);
-	} else {
-		result.failure("User cannot view group, or group does not exist");
+
+	if (!groupData) {
+		return result.failure("User cannot view group, or group does not exist");
 	}
+
+	if (!groupData.members[user]) {
+		return result.failure("User cannot view group, or group does not exist");
+	}
+
+	let info = {
+		id: groupData.id,
+		name: groupData.name,
+		role: groupData.members[user]
+	};
+	return result.success(info);
 }
 
 async function changeName(user, group, newName) {
