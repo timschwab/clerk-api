@@ -9,10 +9,11 @@ function success(returnObject) {
 	};
 }
 
-function failure(message) {
+function failure(message, type) {
 	return {
 		success: false,
-		message: message
+		message: message,
+		type: type
 	};
 }
 
