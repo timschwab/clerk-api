@@ -11,6 +11,7 @@ const errors = require("./request-layer/errors");
 const users = require("./request-layer/users");
 const tokens = require("./request-layer/tokens");
 const groups = require("./request-layer/groups");
+const budget = require("./request-layer/budget");
 
 // Use initial middlewares
 router.use(cors);
@@ -21,6 +22,7 @@ router.use(auth);
 router.use(users);
 router.use(tokens);
 router.use(groups);
+router.use(budget);
 
 // Handle errors
 router.use(errors.error404);

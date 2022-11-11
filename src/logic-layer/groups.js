@@ -70,7 +70,7 @@ async function changeName(user, group, newName) {
 		groupData.name = newName;
 		return result.success();
 	} else {
-		result.failure("User cannot change group's name");
+		return result.failure("User cannot change group's name");
 	}
 }
 
@@ -90,7 +90,7 @@ async function deleteGroup(user, group) {
 
 		return result.success();
 	} else {
-		result.failure("User cannot change group's name");
+		return result.failure("User cannot delete group");
 	}
 }
 

@@ -3,15 +3,19 @@ function make() {
 		tokens: {},
 		users: {
 			data: {},
-			index: {},
+			index: {}
 		},
 		groups: {
 			data: {},
-			userIndex: {},
+			userIndex: {}
 		},
+		budgets: {
+			data: {},
+			groupIndex: {}
+		}
 	};
 }
 
 module.exports = {
-	make,
+	make
 };
