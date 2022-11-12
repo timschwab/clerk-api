@@ -1,6 +1,7 @@
 const db = require("../db-layer/db");
 const slim = require("../slim-id");
 const result = require("./result");
+const hooks = require("./hooks");
 
 async function create(user) {
 	// Create new group data
@@ -22,6 +23,11 @@ async function create(user) {
 		userIndex[user] = [];
 	}
 	userIndex[user].push(groupId);
+
+	// Run the group-create hook
+	hooks.run("group-create", {
+		group: groupId
+	});
 
 	return result.success(groupId);
 }
@@ -77,21 +83,33 @@ async function changeName(user, group, newName) {
 async function deleteGroup(user, group) {
 	let groups = db.state.groups;
 	let groupData = groups.data[group];
-	if (groupData.members[user] == "admin") {
-		// Remove group from user indices
-		for (let user of Object.keys(groupData.members)) {
-			groups.userIndex[user] = groups.userIndex[user].filter(
-				(val) => val != group
-			);
-		}
+	const errorResult = result.failure(
+		"User can't delete group, or group doesn't exist"
+	);
 
-		// Remove group from groups
-		delete groups.data[group];
-
-		return result.success();
-	} else {
-		return result.failure("User cannot delete group");
+	// Validate the request
+	if (!groupData) {
+		return errorResult;
+	} else if (groupData.members[user] != "admin") {
+		return errorResult;
 	}
+
+	// Remove group from user indices
+	for (let user of Object.keys(groupData.members)) {
+		groups.userIndex[user] = groups.userIndex[user].filter(
+			(val) => val != group
+		);
+	}
+
+	// Remove group from groups
+	delete groups.data[group];
+
+	// Run the group-delete hook
+	hooks.run("group-delete", {
+		group: group
+	});
+
+	return result.success();
 }
 
 module.exports = {

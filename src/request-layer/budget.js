@@ -6,6 +6,8 @@ const budgetHandler = require("../logic-layer/budget");
 router.get("/budget/fromGroup/:group", fromGroup);
 router.post("/budget/create/:group", create);
 
+router.get("/budget/:budget", info);
+
 async function fromGroup(req, res) {
 	let user = req.auth.user;
 	let group = req.params.group;
@@ -42,6 +44,24 @@ async function create(req, res) {
 			} else {
 				res.status(500);
 			}
+		}
+	} else {
+		res.status(401).send();
+	}
+}
+
+async function info(req, res) {
+	let user = req.auth.user;
+	let budget = req.params.budget;
+
+	if (user) {
+		let result = await budgetHandler.info(user, budget);
+		if (result.success) {
+			res.status(200).send({
+				budget: result.return
+			});
+		} else {
+			res.status(403);
 		}
 	} else {
 		res.status(401).send();
