@@ -66,7 +66,11 @@ async function safeCreate(group) {
 	let id = slim.make();
 	let newBudget = {
 		id: id,
-		group: group
+		group: group,
+		revenue: [],
+		expenses: {},
+		savings: {},
+		spendingMoney: null
 	};
 
 	budgets.data[id] = newBudget;
