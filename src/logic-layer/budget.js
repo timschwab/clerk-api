@@ -2,6 +2,7 @@ const db = require("../db-layer/db");
 const slim = require("../slim-id");
 const result = require("./result");
 const hooks = require("./hooks");
+const utils = require("./utils");
 
 hooks.register("group-delete", deleteHook);
 hooks.register("group-create", hookCreate);
@@ -67,7 +68,7 @@ async function safeCreate(group) {
 	let newBudget = {
 		id: id,
 		group: group,
-		revenue: [],
+		revenue: {},
 		expenses: {},
 		savings: {},
 		spendingMoney: null
@@ -125,8 +126,34 @@ async function info(user, budgetId) {
 	return budget;
 }
 
+async function saveRevenue(user, budgetId, revenue) {
+	// Get the budget
+	let budget = await safeGet(user, budgetId);
+	if (budget.success) {
+		budget = budget.return;
+	} else {
+		return budget;
+	}
+
+	// Validate that the revenue looks right
+	if (utils.jsonType(revenue) != "object") {
+		return result.failure("Revenue must be an object");
+	}
+	let nonNumbers = Object.values(revenue).filter(
+		(val) => typeof val != "number"
+	);
+	if (nonNumbers.length) {
+		return result.failure("All revenue values must be numbers");
+	}
+
+	// Set the revenue and return
+	budget.revenue = revenue;
+	return result.success();
+}
+
 module.exports = {
 	fromGroup,
 	userCreate,
-	info
+	info,
+	saveRevenue
 };

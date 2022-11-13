@@ -8,6 +8,8 @@ router.post("/budget/create/:group", create);
 
 router.get("/budget/:budget", info);
 
+router.post("/budget/:budget/revenue", saveRevenue);
+
 async function fromGroup(req, res) {
 	let user = req.auth.user;
 	let group = req.params.group;
@@ -42,7 +44,7 @@ async function create(req, res) {
 			} else if (result.type == "already-exists") {
 				res.status(400).send(result);
 			} else {
-				res.status(500);
+				res.status(500).send();
 			}
 		}
 	} else {
@@ -62,6 +64,23 @@ async function info(req, res) {
 			});
 		} else {
 			res.status(403);
+		}
+	} else {
+		res.status(401).send();
+	}
+}
+
+async function saveRevenue(req, res) {
+	let user = req.auth.user;
+	let budget = req.params.budget;
+	let revenue = req.body;
+
+	if (user) {
+		let result = await budgetHandler.saveRevenue(user, budget, revenue);
+		if (result.success) {
+			res.status(200).send();
+		} else {
+			res.status(403).send();
 		}
 	} else {
 		res.status(401).send();
