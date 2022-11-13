@@ -13,7 +13,7 @@ function jsonType(val) {
 		return "boolean";
 	}
 
-	// type will be "object" for object, array, and null
+	// typeof will return "object" for object, array, and null
 	if (val === null) {
 		return "null";
 	}

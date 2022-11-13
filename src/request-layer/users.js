@@ -2,10 +2,10 @@ const logger = require("../logger");
 const wrapped = require("./wrappedRouter");
 const router = wrapped.make();
 
-const usersHandler = require('../logic-layer/users');
+const usersHandler = require("../logic-layer/users");
 
-router.post('/users/register', registerRequest);
-router.post('/users/login', loginRequest);
+router.post("/users/register", registerRequest);
+router.post("/users/login", loginRequest);
 router.get("/users/info", infoRequest);
 router.post("/users/changeUsername", changeUsername);
 router.post("/users/changePassword", changePassword);
@@ -28,9 +28,7 @@ async function loginRequest(req, res) {
 
 	let result = await usersHandler.login(name, pass);
 	if (result.success) {
-		res.status(200).send({
-			token: result.return
-		});
+		res.status(200).send(result.return);
 	} else {
 		res.status(401).send();
 	}

@@ -17,9 +17,7 @@ async function fromGroup(req, res) {
 	if (user) {
 		let result = await budgetHandler.fromGroup(user, group);
 		if (result.success) {
-			res.status(200).send({
-				id: result.return
-			});
+			res.status(200).send(result.return);
 		} else {
 			res.status(403);
 		}
@@ -35,9 +33,7 @@ async function create(req, res) {
 	if (user) {
 		let result = await budgetHandler.create(user, group);
 		if (result.success) {
-			res.status(200).send({
-				id: result.return
-			});
+			res.status(200).send(result.return);
 		} else {
 			if (result.type == "authorization") {
 				res.status(403).send(result);
@@ -59,9 +55,7 @@ async function info(req, res) {
 	if (user) {
 		let result = await budgetHandler.info(user, budget);
 		if (result.success) {
-			res.status(200).send({
-				budget: result.return
-			});
+			res.status(200).send(result.return);
 		} else {
 			res.status(403);
 		}
