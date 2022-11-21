@@ -9,6 +9,8 @@ router.post("/budget/create/:group", create);
 router.get("/budget/:budget", info);
 
 router.post("/budget/:budget/revenue", saveRevenue);
+router.post("/budget/:budget/spendingMoney", saveSpendingMoney);
+router.post("/budget/:budget/expenses", saveExpenses);
 
 async function fromGroup(req, res) {
 	let user = req.auth.user;
@@ -71,6 +73,44 @@ async function saveRevenue(req, res) {
 
 	if (user) {
 		let result = await budgetHandler.saveRevenue(user, budget, revenue);
+		if (result.success) {
+			res.status(200).send();
+		} else {
+			res.status(403).send();
+		}
+	} else {
+		res.status(401).send();
+	}
+}
+
+async function saveSpendingMoney(req, res) {
+	let user = req.auth.user;
+	let budget = req.params.budget;
+	let spendingMoney = req.body.spendingMoney;
+
+	if (user) {
+		let result = await budgetHandler.saveSpendingMoney(
+			user,
+			budget,
+			spendingMoney
+		);
+		if (result.success) {
+			res.status(200).send();
+		} else {
+			res.status(403).send();
+		}
+	} else {
+		res.status(401).send();
+	}
+}
+
+async function saveExpenses(req, res) {
+	let user = req.auth.user;
+	let budget = req.params.budget;
+	let expenses = req.body;
+
+	if (user) {
+		let result = await budgetHandler.saveExpenses(user, budget, expenses);
 		if (result.success) {
 			res.status(200).send();
 		} else {

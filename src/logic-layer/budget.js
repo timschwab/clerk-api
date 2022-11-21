@@ -139,11 +139,11 @@ async function saveRevenue(user, budgetId, revenue) {
 	if (utils.jsonType(revenue) != "object") {
 		return result.failure("Revenue must be an object");
 	}
-	let nonNumbers = Object.values(revenue).filter(
-		(val) => typeof val != "number"
-	);
-	if (nonNumbers.length) {
-		return result.failure("All revenue values must be numbers");
+
+	for (let clump of Object.values(expenses)) {
+		if (utils.jsonType(clump) != "number") {
+			return result.failure("All revenue values must be numbers");
+		}
 	}
 
 	// Set the revenue and return
@@ -151,9 +151,61 @@ async function saveRevenue(user, budgetId, revenue) {
 	return result.success();
 }
 
+async function saveSpendingMoney(user, budgetId, spendingMoney) {
+	// Get the budget
+	let budget = await safeGet(user, budgetId);
+	if (budget.success) {
+		budget = budget.return;
+	} else {
+		return budget;
+	}
+
+	// Validate that the spendingMoney looks right
+	if (utils.jsonType(spendingMoney) != "number") {
+		return result.failure("Spending money must be a number");
+	}
+
+	// Set the spendingMoney and return
+	budget.spendingMoney = spendingMoney;
+	return result.success();
+}
+
+async function saveExpenses(user, budgetId, expenses) {
+	// Get the budget
+	let budget = await safeGet(user, budgetId);
+	if (budget.success) {
+		budget = budget.return;
+	} else {
+		return budget;
+	}
+
+	// Validate that the expenses has the correct structure
+	if (utils.jsonType(expenses) != "object") {
+		return result.failure("Expenses must be an object");
+	}
+
+	for (let clump of Object.values(expenses)) {
+		if (utils.jsonType(clump) != "object") {
+			return result.failure("All expense values must be objects (clumps)");
+		}
+
+		for (let expense of Object.values(clump)) {
+			if (utils.jsonType(expense) != "number") {
+				return result.failure("All clump values must be numbers (expenses)");
+			}
+		}
+	}
+
+	// Set the expenses and return
+	budget.expenses = expenses;
+	return result.success();
+}
+
 module.exports = {
 	fromGroup,
 	userCreate,
 	info,
-	saveRevenue
+	saveRevenue,
+	saveSpendingMoney,
+	saveExpenses
 };

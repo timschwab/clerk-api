@@ -16,6 +16,7 @@ const budget = require("./request-layer/budget");
 // Use initial middlewares
 router.use(cors);
 router.use(express.json());
+router.use(errors.errorJson);
 router.use(auth);
 
 // Use the main routes
