@@ -3,17 +3,18 @@ const db = require("../db-layer/db");
 const slim = require("../slim-id");
 const result = require("./result");
 
+const daysTokensLast = 30;
 const secondsBetweenExpireChecks = 60;
 
 async function newToken(user) {
 	let token = slim.make();
 	let tomorrow = new Date();
-	tomorrow.setDate(new Date().getDate() + 1);
+	tomorrow.setDate(new Date().getDate() + daysTokensLast);
 
 	let object = {
 		token: token,
 		user: user,
-		expire: tomorrow.toISOString(),
+		expire: tomorrow.toISOString()
 	};
 
 	db.state.tokens[token] = object;
@@ -58,5 +59,5 @@ async function expireTokens() {
 module.exports = {
 	newToken,
 	getUser,
-	validate,
+	validate
 };
